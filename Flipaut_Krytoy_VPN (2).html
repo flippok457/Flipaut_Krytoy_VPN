@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Flipaut_Krytoy VPN</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(145deg, #0a1f0a 0%, #0d2b0d 30%, #1a3c1a 60%, #0f1f0f 100%);
+      min-height: 100vh;
+      color: #e8f5e9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%; left: -10%;
+      width: 60vw; height: 60vw;
+      background: radial-gradient(circle, rgba(76, 175, 80, 0.15) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -15%; right: -10%;
+      width: 50vw; height: 50vw;
+      background: radial-gradient(circle, rgba(129, 199, 132, 0.12) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .container {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 440px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 24px;
+    }
+
+    .header { text-align: center; margin-top: 8px; }
+
+    .logo {
+      font-size: 2.3rem; font-weight: 800; letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #a5d6a7 0%, #66bb6a 40%, #43a047 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem; color: #81c784; opacity: 0.85; font-weight: 500;
+    }
+
+    .card {
+      background: rgba(15, 40, 15, 0.8);
+      border: 1px solid rgba(129, 199, 132, 0.25);
+      border-radius: 20px;
+      padding: 28px 22px;
+      width: 100%;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .card-title {
+      font-size: 1.1rem; font-weight: 600; color: #c8e6c9;
+      margin-bottom: 18px; text-align: center;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 1.15rem; font-weight: 700;
+      color: #0a1f0a;
+      background: linear-gradient(135deg, #81c784 0%, #66bb6a 50%, #43a047 100%);
+      border: none; border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.35);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(76, 175, 80, 0.5);
+    }
+
+    .copy-btn.copied {
+      background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+      color: #fff;
+    }
+
+    .steps {
+      margin-top: 22px;
+      background: rgba(20, 50, 20, 0.5);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: #c8e6c9;
+    }
+
+    .steps b { color: #a5d6a7; }
+
+    .url-box {
+      margin-top: 16px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.78rem;
+      color: #81c784;
+      word-break: break-all;
+      text-align: center;
+      border: 1px solid rgba(129, 199, 132, 0.15);
+    }
+
+    .footer {
+      margin-top: 6px;
+      font-size: 0.75rem; color: #558b2f; opacity: 0.7;
+    }
+
+    .toast {
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2e7d32; color: #fff;
+      padding: 14px 28px; border-radius: 12px;
+      font-weight: 600; font-size: 0.95rem;
+      opacity: 0; pointer-events: none;
+      transition: all 0.3s ease; z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">Flipaut_Krytoy VPN</div>
+      <div class="subtitle">Быстрый • Стабильный • Простой</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Подписка с названием</div>
+
+      <button class="copy-btn" id="mainCopyBtn" onclick="copySubscription()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        Скопировать ссылку подписки
+      </button>
+
+      <div class="url-box">https://dpaste.org/AUepY/raw</div>
+
+      <div class="steps">
+        <b>Как добавить (будет название Flipaut_Krytoy VPN):</b><br>
+        1. Нажми кнопку выше<br>
+        2. Открой <b>HAPP</b> → нажми <b>+</b><br>
+        3. Выбери <b>«Добавить подписку»</b><br>
+        4. Вставь ссылку и сохрани<br>
+        5. Готово — сверху будет <b>Flipaut_Krytoy VPN</b>
+      </div>
+    </div>
+
+    <div class="footer">Flipaut_Krytoy VPN • 7 серверов</div>
+  </div>
+
+  <div class="toast" id="toast">Скопировано!</div>
+
+  <script>
+    const SUB_URL = 'https://dpaste.org/AUepY/raw';
+
+    function showToast(text = 'Скопировано!') {
+      const toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    }
+
+    function copySubscription() {
+      const btn = document.getElementById('mainCopyBtn');
+      copyText(SUB_URL).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '✓ Скопировано! Вставляй в HAPP';
+        showToast('Ссылка скопирована!');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = `
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Скопировать ссылку подписки
+          `;
+        }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>
